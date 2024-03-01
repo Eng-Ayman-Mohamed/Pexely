@@ -543,10 +543,6 @@ video {
   top: 0.5rem;
 }
 
-.mb-5 {
-  margin-bottom: 1.25rem;
-}
-
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -752,40 +748,12 @@ video {
 }
 
 @media (max-width: 400px) {
-  .vsm\:h-3 {
-    height: 0.75rem;
-  }
-
-  .vsm\:h-5 {
-    height: 1.25rem;
-  }
-
-  .vsm\:h-7 {
-    height: 1.75rem;
-  }
-
-  .vsm\:h-10 {
-    height: 2.5rem;
-  }
-
   .vsm\:h-14 {
     height: 3.5rem;
   }
 
-  .vsm\:h-4 {
-    height: 1rem;
-  }
-
-  .vsm\:h-6 {
-    height: 1.5rem;
-  }
-
   .vsm\:h-8 {
     height: 2rem;
-  }
-
-  .vsm\:p-2 {
-    padding: 0.5rem;
   }
 
   .vsm\:p-1 {

@@ -33,7 +33,7 @@ function App() {
       <nav
         className="fixed w-lvw flex backdrop-blur
        justify-center  p-4 vsm:p-1 h-[10vh] vsm:h-14
-       shadow-lg  lg:text-3xl md:text-2xl items-center "
+       shadow-lg z-indx:1 lg:text-3xl md:text-2xl items-center "
       >
         <input
           type="text"
@@ -59,12 +59,14 @@ function App() {
         <div className=" h-[4rem] w-lvw lg:h-[5rem] md:h-[4rem]"></div>
         {data.map((animal) => {
           return (
-            <img
-              key={animal.id}
-              className="h-auto w-[90vw] hover:cursor-pointer "
-              src={animal.src.original}
-              alt=""
-            />
+            <a href={animal.src.original} target="_blank" rel="noreferrer">
+              <img
+                key={animal.id}
+                className=" h-auto w-[90vw] hover:cursor-pointer scroll-watcher "
+                src={animal.src.original}
+                alt=""
+              />
+            </a>
           );
         })}
       </div>
