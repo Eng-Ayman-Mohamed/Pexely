@@ -3,30 +3,68 @@ import "./Styles.css";
 import React from "react";
 import { MdDarkMode } from "react-icons/md";
 import { MdOutlineLightMode } from "react-icons/md";
-import { createClient } from "pexels";
+import { useEffect } from "react";
+import axios from "axios";
+const pexely_url = `https://api.pexels.com/v1/search`;
+
 function App() {
   const [mode, setMode] = useState(false);
   const [data, setData] = useState([]);
-  const client = createClient(
-    "IF3ZplttUgivSiWjFSwayHIqOX9AJtyrUjyEEZ5MhDlNPlSvc50nleQW"
-  );
+  const [errmsg, setErrMsg] = useState("");
+  const [page, SetPage] = useState(1);
+  const [disabled, setDisabled] = useState(false);
   const [query, setQuery] = useState("Animals");
   const Dark = () => {
     setMode(!mode);
   };
-  async function fetchData() {
-    client.photos.search({ query, per_page: 20 }).then((photos) => {
-      setData(photos.photos);
-    });
-  }
-  fetchData();
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await axios.get(
+          pexely_url + `?page=${page}&per_page=${20}&query=${query}`,
+          {
+            headers: {
+              Authorization:
+                "IF3ZplttUgivSiWjFSwayHIqOX9AJtyrUjyEEZ5MhDlNPlSvc50nleQW",
+            },
+          }
+        );
+        setData(res.data.photos);
+      } catch (err) {
+        if (!err?.response) {
+          setErrMsg("No Server Response");
+        } else {
+          setErrMsg("Loading Failed");
+        }
+      }
+    }
+    fetchData();
+  }, [query, page, errmsg]);
+
   const handleChange = (event) => {
     if (event.key === "Enter") {
       setQuery(event.target.value);
     }
-
-    fetchData();
   };
+  const nextPage = () => {
+    SetPage(page + 1);
+    console.log(page);
+  };
+  const prevPage = () => {
+    if (page > 1) {
+      SetPage(page - 1);
+    }
+    console.log(page);
+  };
+
+  useEffect(() => {
+    if (page > 1) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [disabled, page]);
 
   return (
     <div className={mode ? "dark bg-slate-900 " : "  "}>
@@ -57,18 +95,47 @@ function App() {
 
       <div className="flex flex-col space-y-4 space-x-0 justify-center items-center  ">
         <div className=" h-[4rem] w-lvw lg:h-[5rem] md:h-[4rem]"></div>
-        {data.map((animal) => {
-          return (
-            <a href={animal.src.original} target="_blank" rel="noreferrer">
-              <img
-                key={animal.id}
-                className=" h-auto w-[90vw] hover:cursor-pointer scroll-watcher "
-                src={animal.src.original}
-                alt=""
-              />
-            </a>
-          );
-        })}
+        {data ? (
+          <div className="flex flex-col space-y-4 space-x-0 justify-center items-center  ">
+            {data.map((animal) => {
+              return (
+                <a
+                  key={animal.id}
+                  href={animal.src.original}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    key={animal.id}
+                    className=" img-cover w-[90vw] hover:cursor-pointer scroll-watcher "
+                    src={animal.src.original}
+                    alt=""
+                  />
+                </a>
+              );
+            })}
+            <div className="w-[90vw] flex place-content-around p-2">
+              <button
+                onClick={prevPage}
+                className={
+                  disabled
+                    ? " text-6xl text-slate-400  dark:text-slate-700 cursor-not-allowed "
+                    : "text-6xl text-slate-950 dark:text-white "
+                }
+              >
+                ❮
+              </button>
+              <button
+                onClick={nextPage}
+                className="text-6xl text-slate-950  dark:text-white  "
+              >
+                ❯
+              </button>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
