@@ -15,12 +15,12 @@ code {
 }
 
 .image-gallery-slide-wrapper{
-  height: 100vh;
+  height: 100svh;
 
 }
 
 .image-gallery-slides{
-  height: 100vh;
+  height: 100svh;
     display: flex;
 }
 

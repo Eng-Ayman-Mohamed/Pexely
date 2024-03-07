@@ -138,7 +138,7 @@ function App() {
 
           <nav
             className="fixed w-fit flex backdrop-blur top-0
-       justify-center  p-4  h-[10vh] vsm:h-fit vsm:p-0 vsm:right-10
+       justify-center  p-4  h-[10vh] vsm:h-fit vsm:p-0 vsm:right-0
        z-indx:1 lg:text-3xl md:text-2xl items-center rounded-full "
           >
             <button
