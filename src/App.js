@@ -31,8 +31,8 @@ function App() {
   const [mode, setMode] = useState(false);
   const [data, setData] = useState([]);
   const [errmsg, setErrMsg] = useState("");
-  /*   const [page, SetPage] = useState(1);
-  const [disabled, setDisabled] = useState(false); */
+  const [page, SetPage] = useState(1);
+  const [disabled, setDisabled] = useState(false);
   const [query, setQuery] = useState("Animals");
   const [loading, setLoading] = useState(true);
   const Dark = () => {
@@ -43,7 +43,7 @@ function App() {
     async function fetchData() {
       try {
         await axios
-          .get(pexely_url + `?page=${1}&per_page=${80}&query=${query}`, {
+          .get(pexely_url + `?page=${page}&per_page=${80}&query=${query}`, {
             headers: {
               Authorization:
                 "IF3ZplttUgivSiWjFSwayHIqOX9AJtyrUjyEEZ5MhDlNPlSvc50nleQW",
@@ -75,14 +75,14 @@ function App() {
       }
     }
     fetchData();
-  }, [query]);
+  }, [query, page]);
 
   const handleChange = (event) => {
     if (event.target.value && event.key === "Enter") {
       setQuery(event.target.value);
     }
   };
-  /*   const nextPage = () => {
+  const nextPage = () => {
     SetPage(page + 1);
     console.log(page);
   };
@@ -99,7 +99,7 @@ function App() {
     } else {
       setDisabled(true);
     }
-  }, [disabled, page]); */
+  }, [disabled, page]);
   const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -138,6 +138,12 @@ function App() {
        justify-center  p-4  h-[10vh] vsm:h-fit vsm:p-0 vsm:right-10
        z-indx:1 lg:text-3xl md:text-2xl items-center rounded-full "
           >
+            <button
+              className="p-2 text-4xl dark:text-white "
+              onClick={prevPage}
+            >
+              &laquo;
+            </button>
             <input
               type="text"
               className=" mt-1 block w-[50vw]  px-3 py-2 bg-inherit 
@@ -149,8 +155,14 @@ function App() {
               onKeyDown={handleChange}
             ></input>
             <button
+              className="p-2 text-4xl dark:text-white "
+              onClick={nextPage}
+            >
+              &raquo;
+            </button>
+            <button
               onClick={Dark}
-              className=" text-lg size-15 top-2
+              className=" text-lg size-15
             font-bold px-3 py-2 text-slate-700 rounded-lg 
             dark:text-white m-top-0 "
             >
