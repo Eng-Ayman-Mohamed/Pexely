@@ -28,7 +28,7 @@ function Loader() {
 }
 
 function App() {
-  const [mode, setMode] = useState(false);
+  const [mode, setMode] = useState(true);
   const [data, setData] = useState([]);
   const [errmsg, setErrMsg] = useState("");
   const [page, SetPage] = useState(1);
@@ -122,6 +122,9 @@ function App() {
         <div className="flex flex-col space-y-4 space-x-0 justify-center items-center  ">
           {width > 1 ? (
             <ImageGallery
+              onClick={() => {
+                console.log("click");
+              }}
               showFullscreenButton="false"
               slideDuration="0"
               loading="lazy"
