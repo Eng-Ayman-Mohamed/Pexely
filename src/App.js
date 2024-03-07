@@ -1,36 +1,71 @@
 import { useState } from "react";
 import "./Styles.css";
+import "./App.css";
+import "./index.css";
 import React from "react";
 import { MdDarkMode } from "react-icons/md";
 import { MdOutlineLightMode } from "react-icons/md";
 import { useEffect } from "react";
 import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import ImageGallery from "react-image-gallery";
 const pexely_url = `https://api.pexels.com/v1/search`;
+
+function Loader() {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress style={{ width: "20vw", height: "20vw" }} />
+    </Box>
+  );
+}
 
 function App() {
   const [mode, setMode] = useState(false);
   const [data, setData] = useState([]);
   const [errmsg, setErrMsg] = useState("");
-  const [page, SetPage] = useState(1);
-  const [disabled, setDisabled] = useState(false);
+  /*   const [page, SetPage] = useState(1);
+  const [disabled, setDisabled] = useState(false); */
   const [query, setQuery] = useState("Animals");
+  const [loading, setLoading] = useState(true);
   const Dark = () => {
     setMode(!mode);
   };
-
+  /*   const [images, setImages] = useState(); */
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await axios.get(
-          pexely_url + `?page=${page}&per_page=${20}&query=${query}`,
-          {
+        await axios
+          .get(pexely_url + `?page=${1}&per_page=${80}&query=${query}`, {
             headers: {
               Authorization:
                 "IF3ZplttUgivSiWjFSwayHIqOX9AJtyrUjyEEZ5MhDlNPlSvc50nleQW",
             },
-          }
-        );
-        setData(res.data.photos);
+          })
+          .then((res) => {
+            setData([]);
+            res.data.photos.map((img) => {
+              return setData((data) => [
+                ...data,
+                {
+                  original: img.src.original,
+                  originalHeight: img.height,
+                  originalAlt: img.alt,
+                  thumbnail: img.src.tiny,
+                  originalWidth: img.width,
+                  loading: "lazy",
+                },
+              ]);
+            });
+            setLoading(false);
+          });
       } catch (err) {
         if (!err?.response) {
           setErrMsg("No Server Response");
@@ -40,14 +75,14 @@ function App() {
       }
     }
     fetchData();
-  }, [query, page, errmsg]);
+  }, [query]);
 
   const handleChange = (event) => {
-    if (event.key === "Enter") {
+    if (event.target.value && event.key === "Enter") {
       setQuery(event.target.value);
     }
   };
-  const nextPage = () => {
+  /*   const nextPage = () => {
     SetPage(page + 1);
     console.log(page);
   };
@@ -64,79 +99,72 @@ function App() {
     } else {
       setDisabled(true);
     }
-  }, [disabled, page]);
+  }, [disabled, page]); */
+  const [width, setWidth] = useState(window.innerWidth);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+    console.log(width);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [width]);
+  if (errmsg) {
+    return <h1>{errmsg}</h1>;
+  }
   return (
     <div className={mode ? "dark bg-slate-900 " : "  "}>
-      <nav
-        className="fixed w-lvw flex backdrop-blur
-       justify-center  p-4 vsm:p-1 h-[10vh] vsm:h-14
-       shadow-lg z-indx:1 lg:text-3xl md:text-2xl items-center "
-      >
-        <input
-          type="text"
-          className=" mt-1 block w-[50vw]  px-3 py-2 bg-inherit 
-           border-slate-300 border-2 rounded-3xl shadow-sm vsm:h-8
-          focus:outline-none focus:border-sky-500 focus:ring-1
-           focus:ring-sky-500 dark:text-purple-700 text-center
-            font-serif text-lg sm:text-sm 
-       "
-          onKeyDown={handleChange}
-        ></input>
-        <button
-          onClick={Dark}
-          className=" text-lg size-15 top-2
-          font-bold px-3 py-2 text-slate-700 rounded-lg 
-            dark:text-white  "
-        >
-          {mode ? <MdOutlineLightMode /> : <MdDarkMode />}
-        </button>
-      </nav>
+      {!loading ? (
+        <div className="flex flex-col space-y-4 space-x-0 justify-center items-center  ">
+          {width > 1 ? (
+            <ImageGallery
+              showFullscreenButton="false"
+              slideDuration="0"
+              loading="lazy"
+              items={data}
+              style={{ height: "100vh" }}
+              thumbnailPosition="left"
+            />
+          ) : (
+            ""
+          )}
 
-      <div className="flex flex-col space-y-4 space-x-0 justify-center items-center  ">
-        <div className=" h-[4rem] w-lvw lg:h-[5rem] md:h-[4rem]"></div>
-        {data ? (
-          <div className="flex flex-col space-y-4 space-x-0 justify-center items-center  ">
-            {data.map((animal) => {
-              return (
-                <a
-                  key={animal.id}
-                  href={animal.src.original}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    key={animal.id}
-                    className=" img-cover w-[90vw] hover:cursor-pointer scroll-watcher "
-                    src={animal.src.original}
-                    alt=""
-                  />
-                </a>
-              );
-            })}
-            <div className="w-[90vw] flex place-content-around p-2">
-              <button
-                onClick={prevPage}
-                className={
-                  disabled
-                    ? " text-6xl text-slate-400  dark:text-slate-700 cursor-not-allowed "
-                    : "text-6xl text-slate-950 dark:text-white "
-                }
-              >
-                ❮
-              </button>
-              <button
-                onClick={nextPage}
-                className="text-6xl text-slate-950  dark:text-white  "
-              >
-                ❯
-              </button>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
+          <nav
+            className="fixed w-fit flex backdrop-blur top-0
+       justify-center  p-4  h-[10vh] vsm:h-fit vsm:p-0 vsm:right-10
+       z-indx:1 lg:text-3xl md:text-2xl items-center rounded-full "
+          >
+            <input
+              type="text"
+              className=" mt-1 block w-[50vw]  px-3 py-2 bg-inherit 
+           border-slate-300 border-2 rounded-3xl shadow-sm vsm:h-8
+             focus:outline-none focus:border-sky-500 focus:ring-1
+           focus:ring-sky-500 dark:text-purple-700 text-center
+              font-serif text-lg sm:text-sm 
+           "
+              onKeyDown={handleChange}
+            ></input>
+            <button
+              onClick={Dark}
+              className=" text-lg size-15 top-2
+            font-bold px-3 py-2 text-slate-700 rounded-lg 
+            dark:text-white m-top-0 "
+            >
+              {mode ? (
+                <MdOutlineLightMode style={{ color: "gold" }} />
+              ) : (
+                <MdDarkMode />
+              )}
+            </button>
+          </nav>
+        </div>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 }
