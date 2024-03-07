@@ -53,6 +53,3 @@ Moving forward, I plan to enhance my project by:
 This project not only solidified my understanding of React.js but also fueled my passion for web development. I look forward to continuing my journey and building more exciting applications in the future.
 
 
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
