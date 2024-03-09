@@ -24,3 +24,18 @@ code {
     display: flex;
 }
 
+.tooltiptext{
+  visibility: hidden;
+  background-color: white;
+  color: #000000;
+  text-align: center;
+  border-radius: 15px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}

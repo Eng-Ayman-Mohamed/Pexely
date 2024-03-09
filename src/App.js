@@ -10,6 +10,7 @@ import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import ImageGallery from "react-image-gallery";
+import "bootstrap/dist/css/bootstrap.min.css";
 const pexely_url = `https://api.pexels.com/v1/search`;
 
 function Loader() {
@@ -33,7 +34,7 @@ function App() {
   const [errmsg, setErrMsg] = useState("");
   const [page, SetPage] = useState(1);
   const [disabled, setDisabled] = useState(false);
-  const [query, setQuery] = useState("Animals");
+  const [query, setQuery] = useState("animals");
   const [loading, setLoading] = useState(true);
   const Dark = () => {
     setMode(!mode);
@@ -41,6 +42,7 @@ function App() {
   /*   const [images, setImages] = useState(); */
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       try {
         await axios
           .get(pexely_url + `?page=${page}&per_page=${80}&query=${query}`, {
@@ -51,6 +53,7 @@ function App() {
           })
           .then((res) => {
             setData([]);
+            console.log(res);
             res.data.photos.map((img) => {
               return setData((data) => [
                 ...data,
@@ -125,9 +128,9 @@ function App() {
               onClick={() => {
                 console.log("click");
               }}
+              loading="lazy"
               showFullscreenButton="false"
               slideDuration="0"
-              loading="lazy"
               items={data}
               style={{ height: "100vh" }}
               thumbnailPosition="left"
@@ -138,10 +141,13 @@ function App() {
 
           <nav
             className="fixed w-fit flex backdrop-blur top-0
-       justify-center  p-4  h-[10vh] vsm:h-fit vsm:p-0 vsm:right-0
-       z-indx:1 lg:text-3xl md:text-2xl items-center rounded-full "
+            justify-center  p-4  h-[10vh] vsm:h-fit  vsm:right-0
+            z-indx:1 lg:text-3xl md:text-2xl items-center rounded-full vsm:p-0 "
           >
             <button
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Previous page"
               className="p-2 text-4xl dark:text-white "
               onClick={prevPage}
             >
@@ -158,6 +164,8 @@ function App() {
               onKeyDown={handleChange}
             ></input>
             <button
+              data-toggle="tooltip"
+              title="Next page"
               className="p-2 text-4xl dark:text-white "
               onClick={nextPage}
             >

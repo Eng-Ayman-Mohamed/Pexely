@@ -737,14 +737,6 @@ video {
 }
 
 @media (max-width: 450px) {
-  .vsm\:right-10 {
-    right: 2.5rem;
-  }
-
-  .vsm\:right-1 {
-    right: 0.25rem;
-  }
-
   .vsm\:right-0 {
     right: 0px;
   }
